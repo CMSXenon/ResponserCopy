@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>正在跳转美团团购...</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #fff8f0 0%, #fff3e8 100%);
+      font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+      padding: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px 32px 36px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 8px 40px rgba(255, 100, 0, 0.10);
+      text-align: center;
+    }
+
+    .logo {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #ff6000, #ff9500);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+      box-shadow: 0 6px 20px rgba(255, 96, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    /* 进度条 */
+    .progress-wrap {
+      background: #f5f5f5;
+      border-radius: 99px;
+      height: 6px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6000, #ff9500);
+      border-radius: 99px;
+      width: 0%;
+      animation: fill 2.5s ease forwards;
+    }
+
+    @keyframes fill {
+      0%   { width: 0%; }
+      60%  { width: 80%; }
+      90%  { width: 95%; }
+      100% { width: 100%; }
+    }
+
+    .countdown {
+      font-size: 13px;
+      color: #bbb;
+      margin-bottom: 28px;
+    }
+
+    .countdown span {
+      color: #ff6000;
+      font-weight: 600;
+    }
+
+    /* 手动跳转按钮 */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #ff6000, #ff8c00);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 20px rgba(255, 96, 0, 0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 3px 10px rgba(255, 96, 0, 0.25);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #ccc;
+      margin-top: 16px;
+    }
+
+    /* 跳转成功状态 */
+    .success-icon {
+      display: none;
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">🍜</div>
+  <h1>正在为您跳转</h1>
+  <p class="subtitle">即将打开美团团购页面<br>请稍候...</p>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="bar"></div>
+  </div>
+  <p class="countdown">自动跳转倒计时 <span id="sec">3</span> 秒</p>
+
+  <a class="btn" href="http://dpurl.cn/E49HyzPz" id="jumpBtn">
+    立即打开美团团购 →
+  </a>
+  <p class="hint">如未自动跳转，请点击上方按钮</p>
+</div>
+
+<script>
+  var target = 'http://dpurl.cn/E49HyzPz';
+  var sec = 3;
+  var el = document.getElementById('sec');
+
+  // 倒计时
+  var timer = setInterval(function() {
+    sec--;
+    el.textContent = sec;
+    if (sec <= 0) {
+      clearInterval(timer);
+      window.location.href = target;
+    }
+  }, 1000);
+
+  // 3秒后自动跳转
+  setTimeout(function() {
+    window.location.href = target;
+  }, 3000);
+</script>
+
+</body>
+</html>
