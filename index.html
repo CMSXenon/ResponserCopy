@@ -15,18 +15,72 @@
       color: #333;
     }
 
-    /* 顶部横幅 */
-    .banner {
-      width: 100%;
-      background: #fff;
-      padding: 0;
+    /* 顶部品牌区 */
+    .header {
+      background: linear-gradient(135deg, #1a73e8, #4a90d9, #6c5ce7);
+      padding: 40px 24px 32px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .banner img {
-      width: 100%;
-      max-width: 100%;
-      display: block;
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+      animation: shimmer 8s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .logo-wrap {
+      width: 88px;
+      height: 88px;
+      background: #fff;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-wrap img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .logo-placeholder {
+      font-size: 40px;
+      line-height: 1;
+    }
+
+    .store-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .store-address {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      position: relative;
+      z-index: 1;
     }
 
     /* 主体内容 */
@@ -166,9 +220,13 @@
 </head>
 <body>
 
-  <!-- 顶部横幅 -->
-  <div class="banner">
-    <img src="./banner.png" alt="古德堡联合口腔">
+  <!-- 顶部品牌 -->
+  <div class="header">
+    <div class="logo-wrap">
+      <img src="./logo.png" alt="logo">
+    </div>
+    <div class="store-name">古德堡联合口腔</div>
+    <div class="store-address">丹徒分院 · 宝龙广场商业街18-5栋119号</div>
   </div>
 
   <!-- 平台入口 -->
