@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>古德堡联合口腔（丹徒分院）</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -59,11 +60,6 @@
       height: 64px;
       object-fit: contain;
       border-radius: 12px;
-    }
-
-    .logo-placeholder {
-      font-size: 40px;
-      line-height: 1;
     }
 
     .store-name {
@@ -147,22 +143,11 @@
       flex-shrink: 0;
     }
 
-    .meituan-icon {
-      background: linear-gradient(135deg, #ffcd00, #ffb300);
-    }
+    .meituan-icon { background: linear-gradient(135deg, #ffcd00, #ffb300); }
+    .douyin-icon  { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+    .gaode-icon   { background: linear-gradient(135deg, #2196f3, #1976d2); }
 
-    .douyin-icon {
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-    }
-
-    .gaode-icon {
-      background: linear-gradient(135deg, #2196f3, #1976d2);
-    }
-
-    .card-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .card-info { flex: 1; min-width: 0; }
 
     .platform-name {
       font-size: 17px;
@@ -173,10 +158,7 @@
       gap: 6px;
     }
 
-    .platform-desc {
-      font-size: 13px;
-      color: #999;
-    }
+    .platform-desc { font-size: 13px; color: #999; }
 
     .tag {
       display: inline-block;
@@ -187,14 +169,91 @@
       vertical-align: middle;
     }
 
-    .tag-hot {
-      background: #fff0f0;
-      color: #e63946;
+    .tag-hot { background: #fff0f0; color: #e63946; }
+    .tag-new { background: #f0f7ff; color: #4a90d9; }
+
+    /* 二维码按钮 */
+    .qr-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: #fff;
+      border: 2px dashed #4a90d9;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: #4a90d9;
+      transition: background 0.2s;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .tag-new {
-      background: #f0f7ff;
-      color: #4a90d9;
+    .qr-btn:active { background: #f0f7ff; }
+
+    /* 二维码弹窗 */
+    .qr-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-modal.show { display: flex; }
+
+    .qr-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 32px 28px 24px;
+      text-align: center;
+      width: 280px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .qr-box h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .qr-box p {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .qr-url {
+      font-size: 11px;
+      color: #aaa;
+      word-break: break-all;
+      margin-bottom: 20px;
+      background: #f5f5f5;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .qr-close {
+      background: #4a90d9;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 32px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
     }
 
     /* 底部提示 */
@@ -212,10 +271,7 @@
       margin-bottom: 6px;
     }
 
-    /* 涟漪点击效果 */
-    .platform-card {
-      -webkit-tap-highlight-color: transparent;
-    }
+    .platform-card { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
 <body>
@@ -265,6 +321,11 @@
         </div>
       </div>
     </a>
+
+    <!-- 二维码按钮 -->
+    <button class="qr-btn" onclick="showQR()">
+      📲 扫码分享本页面
+    </button>
   </div>
 
   <!-- 底部 -->
@@ -273,6 +334,40 @@
     手机碰一碰即可直达<br>
     古德堡联合口腔 © 2026
   </div>
+
+  <!-- 二维码弹窗 -->
+  <div class="qr-modal" id="qrModal" onclick="hideQR(event)">
+    <div class="qr-box">
+      <h3>扫码访问本页面</h3>
+      <p>微信扫一扫，分享给顾客</p>
+      <div id="qrcode"></div>
+      <div class="qr-url" id="qrUrl"></div>
+      <button class="qr-close" onclick="hideQR()">关闭</button>
+    </div>
+  </div>
+
+  <script>
+    const SITE_URL = 'https://cmsxenon.github.io/ResponserCopy/';
+
+    function showQR() {
+      document.getElementById('qrUrl').textContent = SITE_URL;
+      document.getElementById('qrcode').innerHTML = '';
+      QRCode.toCanvas(document.createElement('canvas'), SITE_URL, {
+        width: 200,
+        margin: 2,
+        color: { dark: '#1a73e8', light: '#ffffff' }
+      }, function(err, canvas) {
+        if (!err) document.getElementById('qrcode').appendChild(canvas);
+      });
+      document.getElementById('qrModal').classList.add('show');
+    }
+
+    function hideQR(e) {
+      if (!e || e.target === document.getElementById('qrModal') || e.target.classList.contains('qr-close')) {
+        document.getElementById('qrModal').classList.remove('show');
+      }
+    }
+  </script>
 
 </body>
 </html>
