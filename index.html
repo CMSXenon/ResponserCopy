@@ -171,6 +171,7 @@
 
     .tag-hot { background: #fff0f0; color: #e63946; }
     .tag-new { background: #f0f7ff; color: #4a90d9; }
+    .tag-app { background: #e8f5e9; color: #2e7d32; font-size: 9px; }
 
     /* 二维码按钮 */
     .qr-btn {
@@ -290,33 +291,33 @@
     <div class="section-title">选择平台查看团购优惠</div>
 
     <!-- 美团 -->
-    <a class="platform-card" href="http://dpurl.cn/ixmUgtXz">
+    <a class="platform-card" href="#" onclick="openMeituan(event)">
       <div class="card-top">
         <div class="platform-icon meituan-icon">🍜</div>
         <div class="card-info">
-          <div class="platform-name">美团团购 <span class="tag tag-hot">热门</span></div>
+          <div class="platform-name">美团团购 <span class="tag tag-hot">热门</span> <span class="tag tag-app">App直达</span></div>
           <div class="platform-desc">团购套餐 · 洁牙 · 美白 · 补牙</div>
         </div>
       </div>
     </a>
 
     <!-- 抖音 -->
-    <a class="platform-card" href="https://v.douyin.com/fyfSfIBSG2g/">
+    <a class="platform-card" href="#" onclick="openDouyin(event)">
       <div class="card-top">
         <div class="platform-icon douyin-icon">🎵</div>
         <div class="card-info">
-          <div class="platform-name">抖音团购 <span class="tag tag-new">优惠</span></div>
+          <div class="platform-name">抖音团购 <span class="tag tag-new">优惠</span> <span class="tag tag-app">App直达</span></div>
           <div class="platform-desc">限时特惠 · 抖音专享价</div>
         </div>
       </div>
     </a>
 
     <!-- 高德 -->
-    <a class="platform-card" href="https://surl.amap.com/auGa2RYv5tU">
+    <a class="platform-card" href="#" onclick="openGaode(event)">
       <div class="card-top">
         <div class="platform-icon gaode-icon">📍</div>
         <div class="card-info">
-          <div class="platform-name">高德地图</div>
+          <div class="platform-name">高德地图 <span class="tag tag-app">App直达</span></div>
           <div class="platform-desc">导航到店 · 查看门店信息</div>
         </div>
       </div>
@@ -349,6 +350,62 @@
   <script>
     const SITE_URL = 'https://cmsxenon.github.io/ResponserCopy/';
 
+    // 美团门店ID
+    const MEITUAN_SHOP_ID = '645991378';
+    
+    // 抖音门店ID
+    const DOUYIN_MERCHANT_ID = '7381333975844784182';
+    
+    // 高德POI ID
+    const GAODE_POI_ID = 'B0K349TGV5';
+
+    // 打开美团
+    function openMeituan(e) {
+      e.preventDefault();
+      // 尝试打开美团App
+      var appUrl = 'imeituan://www.meituan.com/shop/' + MEITUAN_SHOP_ID;
+      var webUrl = 'https://i.meituan.com/shop/' + MEITUAN_SHOP_ID;
+      openWithFallback(appUrl, webUrl);
+    }
+
+    // 打开抖音
+    function openDouyin(e) {
+      e.preventDefault();
+      // 尝试打开抖音App
+      var appUrl = 'snssdk1128://aweme/detail/v2/?aweme_id=' + DOUYIN_MERCHANT_ID;
+      var webUrl = 'https://www.douyin.com/discovery/search?keyword=古德堡联合口腔丹徒分院';
+      openWithFallback(appUrl, webUrl);
+    }
+
+    // 打开高德
+    function openGaode(e) {
+      e.preventDefault();
+      // 尝试打开高德App
+      var appUrl = 'amapuri://shop/poi?poiid=' + GAODE_POI_ID;
+      var webUrl = 'https://restapi.amap.com/v3/place/detail?poiid=' + GAODE_POI_ID;
+      openWithFallback(appUrl, webUrl);
+    }
+
+    // 带降级处理的跳转
+    function openWithFallback(appUrl, webUrl) {
+      // 尝试打开App
+      var start = Date.now();
+      var ifr = document.createElement('iframe');
+      ifr.src = appUrl;
+      ifr.style.display = 'none';
+      document.body.appendChild(ifr);
+      
+      // 延迟检查是否成功唤起App
+      setTimeout(function() {
+        document.body.removeChild(ifr);
+        // 如果时间差太小，说明可能被拦截，降级到网页
+        if (Date.now() - start < 1500) {
+          window.location.href = webUrl;
+        }
+      }, 800);
+    }
+
+    // 显示二维码
     function showQR() {
       document.getElementById('qrUrl').textContent = SITE_URL;
       document.getElementById('qrcode').innerHTML = '';
@@ -362,6 +419,7 @@
       document.getElementById('qrModal').classList.add('show');
     }
 
+    // 隐藏二维码
     function hideQR(e) {
       if (!e || e.target === document.getElementById('qrModal') || e.target.classList.contains('qr-close')) {
         document.getElementById('qrModal').classList.remove('show');
