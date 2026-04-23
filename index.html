@@ -359,25 +359,22 @@
     // 高德POI ID
     const GAODE_POI_ID = 'B0K349TGV5';
 
-    // 打开美团（直接跳转网页版，会自动唤起App）
+    // 打开美团（使用原始分享链接）
     function openMeituan(e) {
       e.preventDefault();
-      // 直接跳转到美团门店页（网页版会自动尝试唤起App）
-      window.location.href = 'https://i.meituan.com/shop/' + MEITUAN_SHOP_ID;
+      window.location.href = 'http://dpurl.cn/MMvTdciz';
     }
 
-    // 打开抖音（直接跳转）
+    // 打开抖音（使用原始分享链接）
     function openDouyin(e) {
       e.preventDefault();
-      // 抖音POI详情页
-      window.location.href = 'https://aweme.snssdk.com/falcon/poi_mwa/poi_detail?poi_id=' + DOUYIN_POI_ID;
+      window.location.href = 'https://v.douyin.com/XvFf4KZZ57A/';
     }
 
-    // 打开高德（直接跳转）
+    // 打开高德（使用原始分享链接）
     function openGaode(e) {
       e.preventDefault();
-      // 高德导航页面
-      window.location.href = 'https://uri.amap.com/navigation?to=116.447,32.126,古德堡联合口腔丹徒分院&callnative=1';
+      window.location.href = 'https://surl.amap.com/auGa2RYv5tU';
     }
 
     // 显示二维码
