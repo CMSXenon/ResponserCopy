@@ -350,34 +350,57 @@
   <script>
     const SITE_URL = 'https://cmsxenon.github.io/ResponserCopy/';
 
-    // 美团门店ID
+    // ====== 平台配置 ======
+    // 美团
     const MEITUAN_SHOP_ID = '645991378';
-    
-    // 抖音POI ID
-    const DOUYIN_POI_ID = '7381333975844784182';
-    
-    // 高德POI ID
-    const GAODE_POI_ID = 'B0K349TGV5';
+    const MEITUAN_SCHEME = 'imeituan://www.meituan.com/shop/' + MEITUAN_SHOP_ID;
+    const MEITUAN_DOWNLOAD = 'https://mobile.meituan.com/download';
 
-    // 打开美团（使用原始分享链接）
+    // 抖音
+    const DOUYIN_POI_ID = '7381333975844784182';
+    const DOUYIN_SCHEME = 'snssdk1128://aweme/detail/poi?poi_id=' + DOUYIN_POI_ID;
+    const DOUYIN_DOWNLOAD = 'https://www.douyin.com/download';
+
+    // 高德
+    const GAODE_SCHEME = 'amapuri://poi?uid=B0K349TGV5&name=古德堡联合口腔丹徒分院&longitude=119.447487&latitude=32.12612';
+    const GAODE_DOWNLOAD = 'https://amap.com/download';
+
+    // ====== 通用唤起函数 ======
+    function openApp(scheme, downloadUrl) {
+      // 1. 尝试用 URL Scheme 唤起 App
+      window.location.href = scheme;
+
+      // 2. 设置 2 秒超时
+      var timeoutId = setTimeout(function() {
+        // 3. 如果 2 秒后页面还在（未唤起 App），跳转到下载页
+        window.location.href = downloadUrl;
+      }, 2000);
+
+      // 4. 如果 App 被成功唤起，页面会进入后台，触发 visibilitychange
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          clearTimeout(timeoutId); // App 已打开，清除超时
+        }
+      });
+    }
+
+    // ====== 各平台点击处理 ======
     function openMeituan(e) {
       e.preventDefault();
-      window.location.href = 'http://dpurl.cn/MMvTdciz';
+      openApp(MEITUAN_SCHEME, MEITUAN_DOWNLOAD);
     }
 
-    // 打开抖音（使用原始分享链接）
     function openDouyin(e) {
       e.preventDefault();
-      window.location.href = 'https://v.douyin.com/XvFf4KZZ57A/';
+      openApp(DOUYIN_SCHEME, DOUYIN_DOWNLOAD);
     }
 
-    // 打开高德（使用原始分享链接）
     function openGaode(e) {
       e.preventDefault();
-      window.location.href = 'https://surl.amap.com/auGa2RYv5tU';
+      openApp(GAODE_SCHEME, GAODE_DOWNLOAD);
     }
 
-    // 显示二维码
+    // ====== 二维码功能 ======
     function showQR() {
       document.getElementById('qrUrl').textContent = SITE_URL;
       document.getElementById('qrcode').innerHTML = '';
@@ -391,7 +414,6 @@
       document.getElementById('qrModal').classList.add('show');
     }
 
-    // 隐藏二维码
     function hideQR(e) {
       if (!e || e.target === document.getElementById('qrModal') || e.target.classList.contains('qr-close')) {
         document.getElementById('qrModal').classList.remove('show');
