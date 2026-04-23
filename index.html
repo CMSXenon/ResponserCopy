@@ -353,56 +353,31 @@
     // 美团门店ID
     const MEITUAN_SHOP_ID = '645991378';
     
-    // 抖音门店ID
-    const DOUYIN_MERCHANT_ID = '7381333975844784182';
+    // 抖音POI ID
+    const DOUYIN_POI_ID = '7381333975844784182';
     
     // 高德POI ID
     const GAODE_POI_ID = 'B0K349TGV5';
 
-    // 打开美团
+    // 打开美团（直接跳转网页版，会自动唤起App）
     function openMeituan(e) {
       e.preventDefault();
-      // 尝试打开美团App
-      var appUrl = 'imeituan://www.meituan.com/shop/' + MEITUAN_SHOP_ID;
-      var webUrl = 'https://i.meituan.com/shop/' + MEITUAN_SHOP_ID;
-      openWithFallback(appUrl, webUrl);
+      // 直接跳转到美团门店页（网页版会自动尝试唤起App）
+      window.location.href = 'https://i.meituan.com/shop/' + MEITUAN_SHOP_ID;
     }
 
-    // 打开抖音
+    // 打开抖音（直接跳转）
     function openDouyin(e) {
       e.preventDefault();
-      // 尝试打开抖音App
-      var appUrl = 'snssdk1128://aweme/detail/v2/?aweme_id=' + DOUYIN_MERCHANT_ID;
-      var webUrl = 'https://www.douyin.com/discovery/search?keyword=古德堡联合口腔丹徒分院';
-      openWithFallback(appUrl, webUrl);
+      // 抖音POI详情页
+      window.location.href = 'https://aweme.snssdk.com/falcon/poi_mwa/poi_detail?poi_id=' + DOUYIN_POI_ID;
     }
 
-    // 打开高德
+    // 打开高德（直接跳转）
     function openGaode(e) {
       e.preventDefault();
-      // 尝试打开高德App
-      var appUrl = 'amapuri://shop/poi?poiid=' + GAODE_POI_ID;
-      var webUrl = 'https://restapi.amap.com/v3/place/detail?poiid=' + GAODE_POI_ID;
-      openWithFallback(appUrl, webUrl);
-    }
-
-    // 带降级处理的跳转
-    function openWithFallback(appUrl, webUrl) {
-      // 尝试打开App
-      var start = Date.now();
-      var ifr = document.createElement('iframe');
-      ifr.src = appUrl;
-      ifr.style.display = 'none';
-      document.body.appendChild(ifr);
-      
-      // 延迟检查是否成功唤起App
-      setTimeout(function() {
-        document.body.removeChild(ifr);
-        // 如果时间差太小，说明可能被拦截，降级到网页
-        if (Date.now() - start < 1500) {
-          window.location.href = webUrl;
-        }
-      }, 800);
+      // 高德导航页面
+      window.location.href = 'https://uri.amap.com/navigation?to=116.447,32.126,古德堡联合口腔丹徒分院&callnative=1';
     }
 
     // 显示二维码
